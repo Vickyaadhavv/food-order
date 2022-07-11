@@ -1,18 +1,39 @@
-import React from "react";
-import Home from "./Home";
-import { Routes,Route } from "react-router-dom";
-import Singlemovie from "./Singlemovie";
-import Error from "./Error";
+import React, { useState } from "react"
+//import { Routes,Route } from "react-router-dom";
 import "./App.css"
+import Amazon from "./component/amazon";
+import Navbar from "./component/navbar";
+import Cart from "./component/cart";
 
 const App = ()=>{
+    const [show , setShow]=useState(true);
+     const [cart, setCart] =useState([]);
+    
+   
+     const handleClick = (item) =>{
+        if (cart.indexOf(item) !== -1)  return;
+     setCart([...cart, item]);
+    }
+    
+  const handleChange = (item, d) => {
+    const ind = cart.indexOf(item);
+    const arr = cart;
+    arr[ind].amount += d;
+
+    if (arr[ind].amount === 0) arr[ind].amount = 1;
+    setCart([...arr]);
+  };
+  
+    
+    //useEffect(() => {
+    //      console.log("cart change");
+     //   }, [cart]);
 return(
     <>
-    <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="movie/:id" element={<Singlemovie />} />
-        <Route path="*" element={<Error />} />
-    </Routes>
+   <Navbar setShow ={setShow} size={cart.length}/>
+   {
+   show ?<Amazon handleClick={handleClick}/> :<Cart cart={cart} setCart={setCart} handleChange={handleChange} /> 
+    }
     </>
 )
 };
